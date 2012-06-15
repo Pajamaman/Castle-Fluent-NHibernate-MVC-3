@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CastleFluentNHibernateMvc3", "CastleFluentNHibernateMvc3\CastleFluentNHibernateMvc3.csproj", "{17C8E6FF-7F3C-4DD6-9DD1-6B6FEF3D1F48}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CastleFluentNHibernateMvc3.Tests", "CastleFluentNHibernateMvc3.Tests\CastleFluentNHibernateMvc3.Tests.csproj", "{CC8A4376-DCDD-4CDA-98C5-F9097C7AC8CF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +15,10 @@ Global
 		{17C8E6FF-7F3C-4DD6-9DD1-6B6FEF3D1F48}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{17C8E6FF-7F3C-4DD6-9DD1-6B6FEF3D1F48}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{17C8E6FF-7F3C-4DD6-9DD1-6B6FEF3D1F48}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC8A4376-DCDD-4CDA-98C5-F9097C7AC8CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC8A4376-DCDD-4CDA-98C5-F9097C7AC8CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC8A4376-DCDD-4CDA-98C5-F9097C7AC8CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC8A4376-DCDD-4CDA-98C5-F9097C7AC8CF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
