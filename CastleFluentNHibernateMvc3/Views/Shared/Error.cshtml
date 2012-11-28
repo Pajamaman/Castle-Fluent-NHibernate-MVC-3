@@ -1,15 +1,14 @@
-﻿@{
-    Layout = null;
+﻿@model string
+
+@{
+    ViewBag.Title = "Error";
 }
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Error</title>
-</head>
-<body>
-    <h2>
-        Sorry, an error occurred while processing your request.
-    </h2>
-</body>
-</html>
+<h2>Error</h2>
+
+@if ( Model != null ) {
+    <p>@Model</p>
+}
+
+<p>@Html.ActionLink( "Click here to return", "Index", "Home" ).</p>
+

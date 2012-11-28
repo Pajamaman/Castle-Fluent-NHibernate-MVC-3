@@ -35,7 +35,7 @@ namespace CastleFluentNHibernateMvc3.Controllers
             {
                 StoreRepository.Rollback();
 
-                return RedirectToAction( "Index" );
+                return View( "Error", model: "No store named Bargin Basin was found." );
             }
 
             try
@@ -50,7 +50,7 @@ namespace CastleFluentNHibernateMvc3.Controllers
             {
                 StoreRepository.Rollback();
 
-                return RedirectToAction( "Error" );
+                return View( "Error", model: "An error occurred while updating the store." );
             }
         }
 
@@ -98,7 +98,7 @@ namespace CastleFluentNHibernateMvc3.Controllers
             {
                 StoreRepository.Rollback();
 
-                return RedirectToAction( "Error" );
+                return View( "Error", model: "An error occurred while adding the stores." );
             }
         }
 
