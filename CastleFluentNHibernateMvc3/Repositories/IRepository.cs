@@ -7,6 +7,9 @@ namespace CastleFluentNHibernateMvc3.Repositories
 {
     public interface IRepository<T>
     {
+        void BeginTransaction();
+        void Commit();
+        void Rollback();
         IQueryable<T> GetAll();
         IQueryable<T> Get( Expression<Func<T, bool>> predicate );
         IEnumerable<T> SaveOrUpdateAll( params T[] entities );

@@ -64,9 +64,15 @@ namespace CastleFluentNHibernateMvc3.Tests.Controllers
             {
                 store
             };
+            
+            storeRepositoryMock.Setup( s => s.BeginTransaction() )
+                .Verifiable();
 
             storeRepositoryMock.Setup( s => s.Get( It.IsAny<Expression<Func<Store, bool>>>() ) )
                 .Returns( stores.AsQueryable() )
+                .Verifiable();
+            
+            storeRepositoryMock.Setup( s => s.Commit() )
                 .Verifiable();
 
             // Act
@@ -86,9 +92,15 @@ namespace CastleFluentNHibernateMvc3.Tests.Controllers
             var controller = GetHomeController();
 
             var stores = new List<Store>();
+            
+            storeRepositoryMock.Setup( s => s.BeginTransaction() )
+                .Verifiable();
 
             storeRepositoryMock.Setup( s => s.Get( It.IsAny<Expression<Func<Store, bool>>>() ) )
                 .Returns( stores.AsQueryable() )
+                .Verifiable();
+            
+            storeRepositoryMock.Setup( s => s.Rollback() )
                 .Verifiable();
 
             // Act
@@ -117,9 +129,15 @@ namespace CastleFluentNHibernateMvc3.Tests.Controllers
                     Name = "Bar Bohemia"
                 }
             };
+            
+            storeRepositoryMock.Setup( s => s.BeginTransaction() )
+                .Verifiable();
 
             storeRepositoryMock.Setup( s => s.SaveOrUpdateAll( It.IsAny<Store>(), It.IsAny<Store>() ) )
                 .Returns( stores.AsEnumerable() )
+                .Verifiable();
+            
+            storeRepositoryMock.Setup( s => s.Commit() )
                 .Verifiable();
 
             // Act

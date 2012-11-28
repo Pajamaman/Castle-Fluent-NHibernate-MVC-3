@@ -9,17 +9,19 @@
 <ul>
 @foreach ( var store in Model ) {
     <li>@store.Name</li>
-    <li>Products:</li>
     <ul>
-        @foreach ( var product in store.Products ) {
-            <li>@product.Name</li>
-        }
-    </ul>
-    <li>Staff:</li>
-    <ul>
-        @foreach ( var employee in store.Staff ) {
-            <li>@employee.FirstName @employee.LastName</li>
-        }
+        <li>Products:</li>
+        <ul>
+            @foreach ( var product in store.Products ) {
+                <li>@product.Name</li>
+            }
+        </ul>
+        <li>Staff:</li>
+        <ul>
+            @foreach ( var employee in store.Staff ) {
+                <li>@employee.FirstName @employee.LastName</li>
+            }
+        </ul>
     </ul>
 }
 </ul>

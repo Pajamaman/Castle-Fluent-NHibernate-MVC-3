@@ -6,6 +6,7 @@ using FluentNHibernate.Cfg.Db;
 using FluentNHibernate.Conventions.Helpers;
 using NHibernate;
 using NHibernate.Cfg;
+using NHibernate.Context;
 using NHibernate.Tool.hbm2ddl;
 
 namespace CastleFluentNHibernateMvc3.Windsor
@@ -37,7 +38,7 @@ namespace CastleFluentNHibernateMvc3.Windsor
                 .ExposeConfiguration( c =>
                     {
                         BuildSchema( c );
-                        c.Properties[ NHibernate.Cfg.Environment.CurrentSessionContextClass ] = "web";
+                        c.CurrentSessionContext<WebSessionContext>();
                     } )
                 .BuildSessionFactory();
         }

@@ -27,16 +27,31 @@ namespace CastleFluentNHibernateMvc3.Controllers
         // Gets and modifies a single store from our database
         public ActionResult Test()
         {
+            StoreRepository.BeginTransaction();
+
             var barginBasin = StoreRepository.Get( s => s.Name == "Bargin Basin" ).SingleOrDefault();
 
             if (barginBasin == null)
             {
+                StoreRepository.Rollback();
+
                 return RedirectToAction( "Index" );
             }
 
-            barginBasin.Name = "Bargain Basin";
+            try
+            {
+                barginBasin.Name = "Bargain Basin";
+            
+                StoreRepository.Commit();
 
-            return RedirectToAction( "Index" );
+                return RedirectToAction( "Index" );
+            }
+            catch
+            {
+                StoreRepository.Rollback();
+
+                return RedirectToAction( "Error" );
+            }
         }
 
         // Adds sample data to our database
@@ -68,14 +83,27 @@ namespace CastleFluentNHibernateMvc3.Controllers
             // The Store-Employee relationship is one-to-many
             AddEmployeesToStore( barginBasin, daisy, jack, sue );
             AddEmployeesToStore( superMart, bill, joan );
+            
+            StoreRepository.BeginTransaction();
 
-            StoreRepository.SaveOrUpdateAll( barginBasin, superMart );
+            try
+            {
+                StoreRepository.SaveOrUpdateAll( barginBasin, superMart );
+            
+                StoreRepository.Commit();
 
-            return RedirectToAction( "Index" );
+                return RedirectToAction( "Index" );
+            }
+            catch
+            {
+                StoreRepository.Rollback();
+
+                return RedirectToAction( "Error" );
+            }
         }
 
         // Adds any products that we pass in to the store that we pass in
-        public static void AddProductsToStore( Store store, params Product[] products )
+        private void AddProductsToStore( Store store, params Product[] products )
         {
             foreach (var product in products)
             {
@@ -84,7 +112,7 @@ namespace CastleFluentNHibernateMvc3.Controllers
         }
 
         // Adds any employees that we pass in to the store that we pass in
-        public static void AddEmployeesToStore( Store store, params Employee[] employees )
+        private void AddEmployeesToStore( Store store, params Employee[] employees )
         {
             foreach (var employee in employees)
             {

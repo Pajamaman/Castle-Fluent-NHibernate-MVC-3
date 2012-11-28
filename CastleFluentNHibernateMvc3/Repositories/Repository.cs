@@ -17,6 +17,21 @@ namespace CastleFluentNHibernateMvc3.Repositories
             Session = session;
         }
 
+        public void BeginTransaction()
+        {
+            Session.BeginTransaction();
+        }
+
+        public void Commit()
+        {
+            Session.Transaction.Commit();
+        }
+
+        public void Rollback()
+        {
+            Session.Transaction.Rollback();
+        }
+
         public IQueryable<T> GetAll()
         {
             return Session.Query<T>();
