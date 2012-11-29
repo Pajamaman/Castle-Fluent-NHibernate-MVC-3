@@ -34,11 +34,24 @@ namespace CastleFluentNHibernateMvc3.Tests.Controllers
         {
             // Arrange
             var controller = GetHomeController();
+            
+            var store = new Store
+            {
+                Name = "Bargin Basin"
+            };
+            var stores = new List<Store>
+            {
+                store
+            };
 
-            var stores = new List<Store>();
+            storeRepositoryMock.Setup( s => s.BeginTransaction() )
+                .Verifiable();
 
             storeRepositoryMock.Setup( s => s.GetAll() )
                 .Returns( stores.AsQueryable() )
+                .Verifiable();
+            
+            storeRepositoryMock.Setup( s => s.Commit() )
                 .Verifiable();
 
             // Act
@@ -48,6 +61,37 @@ namespace CastleFluentNHibernateMvc3.Tests.Controllers
             storeRepositoryMock.Verify();
 
             Assert.IsInstanceOf<ViewResult>( result );
+        }
+        
+        [Test]
+        public void Index_NoStores()
+        {
+            // Arrange
+            var controller = GetHomeController();
+            
+            var stores = new List<Store>();
+
+            storeRepositoryMock.Setup( s => s.BeginTransaction() )
+                .Verifiable();
+
+            storeRepositoryMock.Setup( s => s.GetAll() )
+                .Returns( stores.AsQueryable() )
+                .Verifiable();
+            
+            storeRepositoryMock.Setup( s => s.Rollback() )
+                .Verifiable();
+
+            // Act
+            var result = controller.Index();
+
+            // Assert
+            storeRepositoryMock.Verify();
+
+            Assert.IsInstanceOf<ViewResult>( result );
+
+            var view = (ViewResult)result;
+
+            Assert.AreEqual( "Error", view.ViewName );
         }
 
         [Test]
@@ -109,7 +153,11 @@ namespace CastleFluentNHibernateMvc3.Tests.Controllers
             // Assert
             storeRepositoryMock.Verify();
 
-            Assert.IsInstanceOf<RedirectToRouteResult>( result );
+            Assert.IsInstanceOf<ViewResult>( result );
+
+            var view = (ViewResult)result;
+
+            Assert.AreEqual( "Error", view.ViewName );
         }
 
         [Test]
