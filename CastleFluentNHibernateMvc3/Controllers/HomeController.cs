@@ -19,9 +19,29 @@ namespace CastleFluentNHibernateMvc3.Controllers
         // Gets all the stores from our database and returns a view that displays them
         public ActionResult Index()
         {
+            StoreRepository.BeginTransaction();
+
             var stores = StoreRepository.GetAll().ToList();
 
-            return View( stores );
+            if ( stores == null || !stores.Any() )
+            {
+                StoreRepository.Rollback();
+
+                return View( "Error", model: "There are no stores in the database. Try going to /Home/Seed." );
+            }
+            
+            try
+            {
+                StoreRepository.Commit();
+
+                return View( stores );
+            }
+            catch
+            {
+                StoreRepository.Rollback();
+
+                return View( "Error", model: "An error occurred while getting the stores." );
+            }
         }
 
         // Gets and modifies a single store from our database
