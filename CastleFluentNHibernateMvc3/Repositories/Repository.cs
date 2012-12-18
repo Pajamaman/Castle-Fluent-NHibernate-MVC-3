@@ -10,31 +10,31 @@ namespace CastleFluentNHibernateMvc3.Repositories
 {
     public class Repository<T> : IRepository<T>
     {
-        private readonly ISession Session;
+        private readonly ISession session;
 
         public Repository( ISession session )
         {
-            Session = session;
+            this.session = session;
         }
 
         public void BeginTransaction()
         {
-            Session.BeginTransaction();
+            session.BeginTransaction();
         }
 
         public void Commit()
         {
-            Session.Transaction.Commit();
+            session.Transaction.Commit();
         }
 
         public void Rollback()
         {
-            Session.Transaction.Rollback();
+            session.Transaction.Rollback();
         }
 
         public IQueryable<T> GetAll()
         {
-            return Session.Query<T>();
+            return session.Query<T>();
         }
 
         public IQueryable<T> Get( Expression<Func<T, bool>> predicate )
@@ -46,7 +46,7 @@ namespace CastleFluentNHibernateMvc3.Repositories
         {
             foreach (var entity in entities)
             {
-                Session.SaveOrUpdate( entity );
+                session.SaveOrUpdate( entity );
             }
 
             return entities;
@@ -54,7 +54,7 @@ namespace CastleFluentNHibernateMvc3.Repositories
 
         public T SaveOrUpdate( T entity )
         {
-            Session.SaveOrUpdate( entity );
+            session.SaveOrUpdate( entity );
 
             return entity;
         }

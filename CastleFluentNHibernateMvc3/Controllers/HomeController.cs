@@ -8,37 +8,37 @@ namespace CastleFluentNHibernateMvc3.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IRepository<Store> StoreRepository;
+        private readonly IRepository<Store> storeRepository;
 
         // Constructs the home controller
         public HomeController( IRepository<Store> storeRepository )
         {
-            StoreRepository = storeRepository;
+            this.storeRepository = storeRepository;
         }
 
         // Gets all the stores from our database and returns a view that displays them
         public ActionResult Index()
         {
-            StoreRepository.BeginTransaction();
+            storeRepository.BeginTransaction();
 
-            var stores = StoreRepository.GetAll().ToList();
+            var stores = storeRepository.GetAll().ToList();
 
             if ( stores == null || !stores.Any() )
             {
-                StoreRepository.Rollback();
+                storeRepository.Rollback();
 
                 return View( "Error", model: "There are no stores in the database. Try going to /Home/Seed." );
             }
             
             try
             {
-                StoreRepository.Commit();
+                storeRepository.Commit();
 
                 return View( stores );
             }
             catch
             {
-                StoreRepository.Rollback();
+                storeRepository.Rollback();
 
                 return View( "Error", model: "An error occurred while getting the stores." );
             }
@@ -47,13 +47,13 @@ namespace CastleFluentNHibernateMvc3.Controllers
         // Gets and modifies a single store from our database
         public ActionResult Test()
         {
-            StoreRepository.BeginTransaction();
+            storeRepository.BeginTransaction();
 
-            var barginBasin = StoreRepository.Get( s => s.Name == "Bargin Basin" ).SingleOrDefault();
+            var barginBasin = storeRepository.Get( s => s.Name == "Bargin Basin" ).SingleOrDefault();
 
             if (barginBasin == null)
             {
-                StoreRepository.Rollback();
+                storeRepository.Rollback();
 
                 return View( "Error", model: "No store named Bargin Basin was found." );
             }
@@ -62,13 +62,13 @@ namespace CastleFluentNHibernateMvc3.Controllers
             {
                 barginBasin.Name = "Bargain Basin";
             
-                StoreRepository.Commit();
+                storeRepository.Commit();
 
                 return RedirectToAction( "Index" );
             }
             catch
             {
-                StoreRepository.Rollback();
+                storeRepository.Rollback();
 
                 return View( "Error", model: "An error occurred while updating the store." );
             }
@@ -104,19 +104,19 @@ namespace CastleFluentNHibernateMvc3.Controllers
             AddEmployeesToStore( barginBasin, daisy, jack, sue );
             AddEmployeesToStore( superMart, bill, joan );
             
-            StoreRepository.BeginTransaction();
+            storeRepository.BeginTransaction();
 
             try
             {
-                StoreRepository.SaveOrUpdateAll( barginBasin, superMart );
+                storeRepository.SaveOrUpdateAll( barginBasin, superMart );
             
-                StoreRepository.Commit();
+                storeRepository.Commit();
 
                 return RedirectToAction( "Index" );
             }
             catch
             {
-                StoreRepository.Rollback();
+                storeRepository.Rollback();
 
                 return View( "Error", model: "An error occurred while adding the stores." );
             }
