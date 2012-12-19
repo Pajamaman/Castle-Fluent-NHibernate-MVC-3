@@ -28,8 +28,7 @@ namespace CastleFluentNHibernateMvc3.Windsor
         {
             return Fluently.Configure()
                 .Database( CreateDbConfig )
-                .Mappings( m => m
-                    .AutoMappings.Add( CreateMappings() ) )
+                .Mappings( m => m.AutoMappings.Add( CreateMappings() ) )
                 .ExposeConfiguration( UpdateSchema )
                 .CurrentSessionContext<WebSessionContext>()
                 .BuildSessionFactory();
@@ -40,8 +39,7 @@ namespace CastleFluentNHibernateMvc3.Windsor
         {
             return MsSqlConfiguration
                 .MsSql2008
-                .ConnectionString( c => c
-                    .FromConnectionStringWithKey( "testConn" ) );
+                .ConnectionString( c => c.FromConnectionStringWithKey( "testConn" ) );
         }
         
         // Returns our mappings
@@ -49,10 +47,8 @@ namespace CastleFluentNHibernateMvc3.Windsor
         {
             return AutoMap
                 .Assembly( System.Reflection.Assembly.GetCallingAssembly() )
-                .Where( t => t
-                    .Namespace == "CastleFluentNHibernateMvc3.Models" )
-                .Conventions.Setup( c => c
-                    .Add( DefaultCascade.SaveUpdate() ) );
+                .Where( t => t.Namespace != null && t.Namespace.EndsWith( "Models" ) )
+                .Conventions.Setup( c => c.Add( DefaultCascade.SaveUpdate() ) );
         }
         
         // Updates the database schema if there are any changes to the model,

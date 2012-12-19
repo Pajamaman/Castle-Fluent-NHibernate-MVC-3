@@ -15,16 +15,10 @@ namespace CastleFluentNHibernateMvc3.Tests.Controllers
     {
         private Mock<IRepository<Store>> storeRepositoryMock;
 
-        public HomeControllerTest()
+        [SetUp]
+        public void Init()
         {
             storeRepositoryMock = new Mock<IRepository<Store>>();
-        }
-
-        public HomeController GetHomeController()
-        {
-            var controller = new HomeController( storeRepositoryMock.Object );
-
-            return controller;
         }
 
         [Test]
@@ -66,10 +60,15 @@ namespace CastleFluentNHibernateMvc3.Tests.Controllers
 
             // Assert
             Assert.IsInstanceOf<ViewResult>( result );
-            
+
             var view = (ViewResult)result;
 
             Assert.AreEqual( "Error", view.ViewName );
+        }
+        
+        private HomeController GetHomeController()
+        {
+            return new HomeController( storeRepositoryMock.Object );
         }
     }
 }
