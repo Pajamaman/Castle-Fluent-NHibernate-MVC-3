@@ -23,49 +23,44 @@ namespace CastleFluentNHibernateMvc3.Windsor
                     .LifestylePerWebRequest() );
         }
 
-        // Returns our NHibernate session factory
+        // Returns our session factory
         private static ISessionFactory CreateSessionFactory()
         {
-            var mappings = CreateMappings();
-
-            return Fluently
-                .Configure()
-                .Database( MsSqlConfiguration.MsSql2008
-                    .ConnectionString( c => c
-                        .FromConnectionStringWithKey( "testConn" ) ) )
+            return Fluently.Configure()
+                .Database( CreateDbConfig )
                 .Mappings( m => m
-                    .AutoMappings.Add( mappings ) )
-                .ExposeConfiguration( c =>
-                    {
-                        BuildSchema( c );
-                        c.CurrentSessionContext<WebSessionContext>();
-                    } )
+                    .AutoMappings.Add( CreateMappings() ) )
+                .ExposeConfiguration( UpdateSchema )
+                .CurrentSessionContext<WebSessionContext>()
                 .BuildSessionFactory();
         }
 
-        // Returns our NHibernate auto mapper
+        // Returns our database configuration
+        private static MsSqlConfiguration CreateDbConfig()
+        {
+            return MsSqlConfiguration
+                .MsSql2008
+                .ConnectionString( c => c
+                    .FromConnectionStringWithKey( "testConn" ) );
+        }
+        
+        // Returns our mappings
         private static AutoPersistenceModel CreateMappings()
         {
             return AutoMap
                 .Assembly( System.Reflection.Assembly.GetCallingAssembly() )
-                .Where( t => t.Namespace == "CastleFluentNHibernateMvc3.Models" )
-                .Conventions.Setup( c =>
-                    {
-                        c.Add( DefaultCascade.SaveUpdate() );
-                    } );
+                .Where( t => t
+                    .Namespace == "CastleFluentNHibernateMvc3.Models" )
+                .Conventions.Setup( c => c
+                    .Add( DefaultCascade.SaveUpdate() ) );
         }
-
-        // Drops and creates the database schema
-        // private static void BuildSchema( Configuration cfg )
-        // {
-        //     new SchemaExport( cfg )
-        //         .Create( false, true );
-        // }
-
-        // Updates the database schema if there are any changes to the model
-        private static void BuildSchema( Configuration cfg )
+        
+        // Updates the database schema if there are any changes to the model,
+        // or drops and creates it if it doesn't exist
+        private static void UpdateSchema( Configuration cfg )
         {
-            new SchemaUpdate( cfg );
+            new SchemaUpdate( cfg )
+                .Execute( false, true );
         }
     }
 }
