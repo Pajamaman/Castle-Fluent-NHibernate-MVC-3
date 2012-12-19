@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Web.Mvc;
 
 using CastleFluentNHibernateMvc3.Controllers;
@@ -34,51 +32,14 @@ namespace CastleFluentNHibernateMvc3.Tests.Controllers
         {
             // Arrange
             var controller = GetHomeController();
-            
-            var store = new Store
-            {
-                Name = "Bargin Basin"
-            };
+
             var stores = new List<Store>
-            {
-                store
-            };
-
-            storeRepositoryMock.Setup( s => s.BeginTransaction() )
-                .Verifiable();
+                {
+                    new Store()
+                };
 
             storeRepositoryMock.Setup( s => s.GetAll() )
                 .Returns( stores.AsQueryable() )
-                .Verifiable();
-            
-            storeRepositoryMock.Setup( s => s.Commit() )
-                .Verifiable();
-
-            // Act
-            var result = controller.Index();
-
-            // Assert
-            storeRepositoryMock.Verify();
-
-            Assert.IsInstanceOf<ViewResult>( result );
-        }
-        
-        [Test]
-        public void Index_NoStores()
-        {
-            // Arrange
-            var controller = GetHomeController();
-            
-            var stores = new List<Store>();
-
-            storeRepositoryMock.Setup( s => s.BeginTransaction() )
-                .Verifiable();
-
-            storeRepositoryMock.Setup( s => s.GetAll() )
-                .Returns( stores.AsQueryable() )
-                .Verifiable();
-            
-            storeRepositoryMock.Setup( s => s.Rollback() )
                 .Verifiable();
 
             // Act
@@ -91,110 +52,24 @@ namespace CastleFluentNHibernateMvc3.Tests.Controllers
 
             var view = (ViewResult)result;
 
-            Assert.AreEqual( "Error", view.ViewName );
+            Assert.IsInstanceOf<List<Store>>( view.Model );
         }
 
         [Test]
-        public void Test()
+        public void Index_NoStoresFound()
         {
             // Arrange
             var controller = GetHomeController();
 
-            var store = new Store
-            {
-                Name = "Bargin Basin"
-            };
-            var stores = new List<Store>
-            {
-                store
-            };
-            
-            storeRepositoryMock.Setup( s => s.BeginTransaction() )
-                .Verifiable();
-
-            storeRepositoryMock.Setup( s => s.Get( It.IsAny<Expression<Func<Store, bool>>>() ) )
-                .Returns( stores.AsQueryable() )
-                .Verifiable();
-            
-            storeRepositoryMock.Setup( s => s.Commit() )
-                .Verifiable();
-
             // Act
-            var result = controller.Test();
+            var result = controller.Index();
 
             // Assert
-            storeRepositoryMock.Verify();
-
-            Assert.IsInstanceOf<RedirectToRouteResult>( result );
-            Assert.AreEqual( store.Name, "Bargain Basin" );
-        }
-
-        [Test]
-        public void Test_NotFound()
-        {
-            // Arrange
-            var controller = GetHomeController();
-
-            var stores = new List<Store>();
-            
-            storeRepositoryMock.Setup( s => s.BeginTransaction() )
-                .Verifiable();
-
-            storeRepositoryMock.Setup( s => s.Get( It.IsAny<Expression<Func<Store, bool>>>() ) )
-                .Returns( stores.AsQueryable() )
-                .Verifiable();
-            
-            storeRepositoryMock.Setup( s => s.Rollback() )
-                .Verifiable();
-
-            // Act
-            var result = controller.Test();
-
-            // Assert
-            storeRepositoryMock.Verify();
-
             Assert.IsInstanceOf<ViewResult>( result );
-
+            
             var view = (ViewResult)result;
 
             Assert.AreEqual( "Error", view.ViewName );
-        }
-
-        [Test]
-        public void Seed()
-        {
-            // Arrange
-            var controller = GetHomeController();
-
-            var stores = new List<Store>
-            {
-                new Store
-                {
-                    Name = "Foo Foundry"
-                },
-                new Store
-                {
-                    Name = "Bar Bohemia"
-                }
-            };
-            
-            storeRepositoryMock.Setup( s => s.BeginTransaction() )
-                .Verifiable();
-
-            storeRepositoryMock.Setup( s => s.SaveOrUpdateAll( It.IsAny<Store>(), It.IsAny<Store>() ) )
-                .Returns( stores.AsEnumerable() )
-                .Verifiable();
-            
-            storeRepositoryMock.Setup( s => s.Commit() )
-                .Verifiable();
-
-            // Act
-            var result = controller.Seed();
-
-            // Assert
-            storeRepositoryMock.Verify();
-
-            Assert.IsInstanceOf<RedirectToRouteResult>( result );
         }
     }
 }
