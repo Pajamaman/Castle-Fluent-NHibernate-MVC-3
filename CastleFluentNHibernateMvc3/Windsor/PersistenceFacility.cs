@@ -1,4 +1,5 @@
-﻿using Castle.MicroKernel.Facilities;
+﻿using Castle.MicroKernel;
+using Castle.MicroKernel.Facilities;
 using Castle.MicroKernel.Registration;
 using FluentNHibernate.Automapping;
 using FluentNHibernate.Cfg;
@@ -17,10 +18,15 @@ namespace CastleFluentNHibernateMvc3.Windsor
         {
             Kernel.Register(
                 Component.For<ISessionFactory>()
-                    .UsingFactoryMethod( _ => CreateSessionFactory() ),
+                    .UsingFactoryMethod( CreateSessionFactory ),
                 Component.For<ISession>()
-                    .UsingFactoryMethod( k => k.Resolve<ISessionFactory>().OpenSession() )
+                    .UsingFactoryMethod( OpenSession )
                     .LifestylePerWebRequest() );
+        }
+
+        private static ISession OpenSession( IKernel kernel )
+        {
+            return kernel.Resolve<ISessionFactory>().OpenSession();
         }
 
         // Returns our session factory

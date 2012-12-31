@@ -10,7 +10,7 @@ namespace CastleFluentNHibernateMvc3.Controllers
     {
         private readonly IRepository<Store> storeRepository;
 
-        // Constructs the home controller
+        // Constructs our home controller
         public HomeController( IRepository<Store> storeRepository )
         {
             this.storeRepository = storeRepository;
@@ -21,7 +21,7 @@ namespace CastleFluentNHibernateMvc3.Controllers
         {
             storeRepository.BeginTransaction();
 
-            var stores = storeRepository.GetAll().ToList();
+            var stores = storeRepository.GetAll();
 
             if ( stores == null || !stores.Any() )
             {
@@ -34,7 +34,7 @@ namespace CastleFluentNHibernateMvc3.Controllers
             {
                 storeRepository.Commit();
 
-                return View( stores );
+                return View( stores.ToList() );
             }
             catch
             {
@@ -51,7 +51,7 @@ namespace CastleFluentNHibernateMvc3.Controllers
 
             var barginBasin = storeRepository.Get( s => s.Name == "Bargin Basin" ).SingleOrDefault();
 
-            if (barginBasin == null)
+            if ( barginBasin == null )
             {
                 storeRepository.Rollback();
 
@@ -125,7 +125,7 @@ namespace CastleFluentNHibernateMvc3.Controllers
         // Adds any products that we pass in to the store that we pass in
         private void AddProductsToStore( Store store, params Product[] products )
         {
-            foreach (var product in products)
+            foreach ( var product in products )
             {
                 store.AddProduct( product );
             }
@@ -134,7 +134,7 @@ namespace CastleFluentNHibernateMvc3.Controllers
         // Adds any employees that we pass in to the store that we pass in
         private void AddEmployeesToStore( Store store, params Employee[] employees )
         {
-            foreach (var employee in employees)
+            foreach ( var employee in employees )
             {
                 store.AddEmployee( employee );
             }
